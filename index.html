@@ -1720,15 +1720,15 @@ async function exportMain(){
   try{
     if(!ckFilterShop){
       const zip=new JSZip();
-      groups.forEach(g=>{zip.file(`${fnSafe(g.label)}_${dateStr()}.xlsx`,wbArray(buildShopWB(g)))});
+      groups.forEach(g=>{zip.file(`Gọi data CTKM ${fnSafe(g.label)}.xlsx`,wbArray(buildShopWB(g)))});
       const blob=await zip.generateAsync({type:'blob'});
-      await saveBlob(blob,`ChiaData_CTKM_${dateStr()}.zip`);
+      await saveBlob(blob,`Gọi data CTKM_${dateStr()}.zip`);
       $('ckdls').textContent='Đã tải file .zip gồm '+groups.length+' shop.';
     }else{
       const g=groups.find(x=>x.key===ckFilterShop);
       if(!g){$('ckdls').textContent='Không tìm thấy shop.';return}
       const blob=new Blob([wbArray(buildShopWB(g))],{type:'application/octet-stream'});
-      await saveBlob(blob,`${fnSafe(g.label)}_${dateStr()}.xlsx`);
+      await saveBlob(blob,`Gọi data CTKM ${fnSafe(g.label)}.xlsx`);
       $('ckdls').textContent='Đã tải file của shop '+g.label+'.';
     }
   }catch(e){console.error(e);$('ckdls').textContent='Lỗi khi tạo file: '+(e&&e.message||e)}
