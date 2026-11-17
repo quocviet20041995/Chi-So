@@ -1683,7 +1683,11 @@ async function handleFiles(files){
   const K=(t,v)=>`<div class="c"><div class="l">${t}</div><div class="v">${v}</div></div>`;
   $('ckkpi').innerHTML=K('Số file',fileCount)+K('Tổng số dòng',totalRows)+K('Số shop',groups.length);
 
-  $('ckvol').innerHTML=`<div class="sc"><table><tr><th style="text-align:left">Shop</th><th>Số dòng</th></tr>${groups.map(g=>`<tr><td style="text-align:left">${esc(g.label)}</td><td>${g.rows.length}</td></tr>`).join('')}</table></div>`;
+  $('ckvol').innerHTML=`<div style="margin-bottom:6px"><button class="pill" id="ckcpall">Copy cả bảng</button> <span class="sub" id="ckcpm">Bấm vào mã shop hoặc tên shop để copy từng ô.</span></div><div class="sc"><table style="user-select:text;-webkit-user-select:text"><tr><th style="text-align:left">Mã shop</th><th style="text-align:left">Shop</th><th>Số dòng</th></tr>${groups.map(g=>`<tr><td style="text-align:left;cursor:copy" class="ckcp" data-c="${esc(g.key)}"><b>${esc(g.key)}</b></td><td style="text-align:left;cursor:copy" class="ckcp" data-c="${esc(g.label)}">${esc(g.label)}</td><td>${g.rows.length}</td></tr>`).join('')}</table></div>`;
+  const ckm=t=>{const m=$('ckcpm');if(m)m.textContent=t};
+  const ckcp=async t=>{try{await navigator.clipboard.writeText(t);return 1}catch(e){try{const a=document.createElement('textarea');a.value=t;a.style.cssText='position:fixed;opacity:0';document.body.appendChild(a);a.select();const ok=document.execCommand('copy');a.remove();return ok}catch(e2){return 0}}};
+  $('ckvol').querySelectorAll('.ckcp').forEach(td=>td.onclick=async()=>{if(window.getSelection&&String(window.getSelection()))return;ckm(await ckcp(td.dataset.c)?'Đã copy: '+td.dataset.c:'Không copy được, hãy bôi đen rồi copy thủ công.')});
+  $('ckcpall').onclick=async()=>{const t='Mã shop\tShop\tSố dòng\n'+groups.map(g=>g.key+'\t'+g.label+'\t'+g.rows.length).join('\n');ckm(await ckcp(t)?'Đã copy cả bảng (dán được vào Excel).':'Không copy được.')};
 
   const selPrev=$('ckshop').value;
   $('ckshop').innerHTML='<option value="">— Tất cả shop (zip) —</option>'+groups.map(g=>`<option value="${esc(g.key)}">${esc(g.label)}</option>`).join('');
