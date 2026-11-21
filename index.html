@@ -354,6 +354,13 @@ table.late td,table.late th{white-space:nowrap!important}table.late td:first-chi
 <div style="display:flex;gap:10px;margin-top:6px;flex-wrap:wrap"><button class="btn" id="ckdl" type="button">Tải file Excel</button><span class="sub" id="ckdls" style="align-self:center"></span></div>
 </div>
 </div>
+<div id="lv" class="hid">
+<h2>Đào tạo Level Dược sĩ — kết quả xét level</h2>
+<div class="sub">Tải file "Kết quả xét Level Dược sĩ" (xlsx, gồm các sheet Quy chế cũ / Quy chế mới / Trượt kỳ trước). Công cụ lọc đúng các dược sĩ thuộc ASM bên dưới, phân loại: tăng level, chưa tăng level (kèm chỉ số không đạt), chờ xét, nguy cơ hạ level, chưa xét do chưa xong ELN, đã đạt level tối đa.</div>
+<div class="up" id="lvup"><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><label class="btn" for="lvfi" tabindex="0">Chọn / kéo thả file Excel</label><span class="sub" id="lvfs" style="flex:1;min-width:200px">Chưa có file nào</span><label class="sub" style="display:flex;gap:6px;align-items:center">ASM: <input id="lvasm" type="text" value="Ngô Quốc Việt" style="padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:inherit;font:inherit;width:170px"></label></div><input type="file" id="lvfi" accept=".xlsx,.xls" style="position:absolute;width:1px;height:1px;opacity:0;overflow:hidden"></div>
+<div id="lvnod" class="c sub" style="margin-top:12px">Chưa có dữ liệu. Hãy chọn hoặc kéo thả file kết quả xét level ở trên.</div>
+<div id="lvbody" class="hid"></div>
+</div>
 </main><script>
 (function(){window.onerror=function(m){var e=document.getElementById("err");if(e){e.style.display="block";e.textContent="Lỗi: "+m}};
 let D={"roster": [], "pharm": [], "shops": [], "staff": [], "inc_shop": [], "inc_ph": [], "bau_ph": [], "coc_n": 0, "coc_status": {}, "coc_shop": {}, "coc_prod": {}, "coc_ph": [], "mua_n": 0, "mua_dt": 0, "mua_prod": {}, "coc_day": {}, "coc_rows": 0, "coc_range": [], "coc_age": {}, "ph_age": {}, "coc_src": {}, "coc_paid": {}, "mua_inc": 0, "inc_top": [], "ph_mua": {}, "ph_coc": {}, "data_date": null, "ph_gcoc": {}, "ph_gmua": {}, "kinds": []};const $=i=>document.getElementById(i);
@@ -569,7 +576,7 @@ const nt=(D.shops||[]).filter(s=>!(s.tg>0));if(nt.length)out.push(`${nt.length} 
 return out}
 function heroDQ(){const u=$('up');if(!u)return;const o=dqB();window.__dq=o;let bt=$('dqbtn');const b=$('dqb');if(b)b.innerHTML='';if(!o.length){if(bt)bt.remove();return}if(!bt){bt=document.createElement('button');bt.id='dqbtn';bt.type='button';bt.className='pill';const t=$('upt');t.parentNode.insertBefore(bt,t);bt.onclick=()=>window.pop('Kiểm tra dữ liệu: '+window.__dq.length+' điểm cần xem lại','<ul style="margin:0 0 0 18px;padding:0;font-size:14px;line-height:1.6">'+window.__dq.map(x=>'<li style="margin-bottom:6px">'+x+'</li>').join('')+'</ul>')}bt.textContent='⚠ Kiểm tra dữ liệu: '+o.length+' điểm';bt.style.cssText='color:var(--warn);font-weight:700;border-color:rgba(194,124,14,.45)'}
 function heroK(){heroDQ();let h=$('heroK');if(!h){const t=document.querySelector('.top');if(!t)return;h=document.createElement('div');h.id='heroK';t.appendChild(h)}
-const S0=D.shops||[];if(!S0.length){h.innerHTML='';return}let S=S0;try{if(typeof tab=='undefined'||(tab!='Vệ tinh'&&tab!='Hàng hoá'&&tab!='Đặt hàng'&&tab!='Chia Data CTKM'))S=S0.filter(s=>(!tS||s.vt==tS)&&(!hS||s.name==hS))}catch(e){S=S0}if(!S.length)S=S0;const ds=sum(S,s=>s.ds||0),tg=sum(S,s=>s.tg||0),est=tg?sum(S,s=>(s.est||0)*(s.tg||0))/tg:0,q=mdays(),col=est>=1?'#9be3bf':est>=.9?'#ffd48a':'#ffb4a2',pace=q.dy/q.dm,df=(tg?ds/tg:0)-pace,pc_=`nhịp chuẩn ${P(pace)} · <b style="display:inline;font-size:12px;color:${df>=0?'#9be3bf':'#ffb4a2'}">${df>=0?'+':''}${(df*100).toFixed(1).replace('.',',')} điểm</b>`;
+const S0=D.shops||[];if(!S0.length){h.innerHTML='';return}let S=S0;try{if(typeof tab=='undefined'||(tab!='Vệ tinh'&&tab!='Hàng hoá'&&tab!='Đặt hàng'&&tab!='Chia Data CTKM'&&tab!='Đào tạo Level'))S=S0.filter(s=>(!tS||s.vt==tS)&&(!hS||s.name==hS))}catch(e){S=S0}if(!S.length)S=S0;const ds=sum(S,s=>s.ds||0),tg=sum(S,s=>s.tg||0),est=tg?sum(S,s=>(s.est||0)*(s.tg||0))/tg:0,q=mdays(),col=est>=1?'#9be3bf':est>=.9?'#ffd48a':'#ffb4a2',pace=q.dy/q.dm,df=(tg?ds/tg:0)-pace,pc_=`nhịp chuẩn ${P(pace)} · <b style="display:inline;font-size:12px;color:${df>=0?'#9be3bf':'#ffb4a2'}">${df>=0?'+':''}${(df*100).toFixed(1).replace('.',',')} điểm</b>`;
 h.innerHTML=`<div><small>Doanh số MTD</small><b style="font-size:20px;white-space:nowrap">${M(ds)}</b><em>${S.length==1?sn(S[0].name):S.length==S0.length?S.length+' shop':S.length+'/'+S0.length+' shop đang lọc'}</em></div><div><small>Đạt target</small><b>${P(tg?ds/tg:0)}</b><em>${pc_}</em></div><div><small>Dự kiến cuối tháng</small><b style="color:${col}">${P(est)}</b><em>nếu giữ nhịp hiện tại</em></div><div><small>Còn lại</small><b>${q.left} ngày</b><em>đến hết tháng</em></div>`}
 function vNew(L,dd,redN,GC,GM,LA){const TR=(LA||[]).filter(x=>!(x.tg>0)&&(x.vt||0)+(x.bau||0)>0).map(x=>({...x,kpi:(x.vt||0)+(x.bau||0)}));
 const dkS=new Set(L.filter(x=>x.dtk>0).map(x=>x.name)),XG={};(D.inc_x||[]).filter(z=>z.g==2&&!dkS.has(z.n)&&L.some(x=>x.name==z.n)).forEach(z=>{const a=XG[z.n]=XG[z.n]||{n:z.n,d:0,m:0,c:0,k:0,l:[]};a.d+=z.d;a.m+=z.m;a.c+=z.c;a.k+=z.k;a.l.push(z)});const XL=Object.values(XG).filter(a=>a.d>0).sort((a,b)=>b.d-a.d||b.c-a.c);
@@ -937,7 +944,7 @@ return bar+`<div class="c" style="margin-top:12px"><b>Vaccine (vệ tinh) — t�
 return bar+top+ovH+'<div class="leg"><b style="background:var(--ok)"></b>Đạt<b style="background:var(--warn)"></b>Sắp đạt<b style="background:var(--bad)"></b>Chưa đạt<b style="background:var(--bl)"></b>Trung bình</div>'+(()=>{const ord=(D.chOrd||{})[t]||[],ix=o=>{const k=ord.indexOf(o[1].t);return k<0?1e6:k},LS=L.map((x,i)=>[x,i]).sort((a,b)=>ix(a[0])-ix(b[0])||a[1]-b[1]).map(x=>x[0]);window.__chMv=t;let g='';try{g=grid(LS)}finally{window.__chMv=null}return '<div style="font-weight:700;margin:6px 0">Chỉ số kinh doanh theo '+(lv=='asm'?'ASM':lv=='shop'?'shop':'nhân viên')+' <span class="sub" style="font-weight:400">· kéo tiêu đề biểu đồ thả vào vị trí muốn đổi (hoặc bấm ◀ ▶)</span>'+(ord.length?' <a href="#" data-mreset="'+t+'" style="font-size:12px;font-weight:400;color:var(--bl)">Đặt lại thứ tự</a>':'')+'<div style="margin-top:6px;font-weight:400;display:flex;gap:6px;flex-wrap:wrap;align-items:center"><span class="sub">Xuất ảnh (4 biểu đồ / hình, xem trước khi tải):</span>'+Array.from({length:Math.ceil(L.length/4)},(_,k)=>'<button class="pill" onclick="window.__shotCh(this,'+k+')">Hình '+(k+1)+' (biểu đồ '+(k*4+1)+'–'+Math.min(L.length,k*4+4)+')</button>').join('')+'<button class="btn" onclick="window.__shotChAll(this)">Xuất tất cả '+Math.ceil(L.length/4)+' hình</button></div>'+'</div>'+g})()+(t=='Thuốc'?sec('Tlk','Chi tiết lượt khách theo shop',lkB(inS.map(se)),true):'')+(t=='Thuốc'?stT(stf):t=='Cắt liều'?clT(stf):'')}
 function showAlt(){try{heroK()}catch(e){}$('et').innerHTML=alt(tab);const g=i=>$(i);g('sH').onchange=e=>{hS=e.target.value;showAlt()};g('sT').onchange=e=>{tS=e.target.value;hS='';showAlt()};g('sX').onclick=()=>{aS='';hS='';tS='';showAlt()};if(g('sB'))g('sB').onclick=()=>{onlyB=!onlyB;showAlt()};if(g('sC'))g('sC').onclick=()=>{onlyC=!onlyC;showAlt()};if(g('sV'))g('sV').onclick=()=>{onlyV=!onlyV;showAlt()};const E=$('et');E.querySelectorAll('[data-fx]').forEach(e=>e.onclick=()=>{const p=e.dataset.fx.split('.')[0],c=fxO[p+'sel'];fxO[p+'sel']=(c===undefined?false:c==e.dataset.fx)?'':e.dataset.fx;showAlt()});E.querySelectorAll('[data-fs]').forEach(e=>e.onclick=()=>{fxS[e.dataset.fs]=!fxS[e.dataset.fs];showAlt()});wireAct(E,showAlt);E.querySelectorAll('[data-sec]').forEach(e=>e.onclick=()=>{const k=e.dataset.sec;fxO[k]=!(fxO[k]===undefined?e.dataset.def=='1':fxO[k]);showAlt()});if(g('sN'))g('sN').onclick=()=>{$('exp').onclick();CATS.forEach(c=>{$('xk_'+c).checked=c=='Nhân viên'});$('xs').value='';gen(true)};if(g('sM'))g('sM').onclick=()=>{$('exp').onclick();CATS.forEach(c=>{$('xk_'+c).checked=c=='Họp ca'});$('xs').value=hS;gen()};if(g('sTh'))g('sTh').onclick=openTh;E.querySelectorAll('[data-go]').forEach(e=>e.onclick=()=>{hS=e.dataset.go;showAlt();window.scrollTo(0,0)})}
 
-function goTab(x){tab=x;tb();try{heroK()}catch(e){}const special=tab=='Vệ tinh'||tab=='Hàng hoá'||tab=='Đặt hàng'||tab=='Chia Data CTKM';$('vt').classList.toggle('hid',tab!='Vệ tinh');$('fb1').classList.toggle('hid',tab!='Vệ tinh');$('empty').classList.toggle('hid',special);$('hh').classList.toggle('hid',tab!='Hàng hoá');$('ck').classList.toggle('hid',tab!='Chia Data CTKM');$('dh').classList.toggle('hid',tab!='Đặt hàng');if(!special)showAlt();if(tab=='Hàng hoá'&&window.hhInit)window.hhInit();if(tab=='Chia Data CTKM'&&window.ckInit)window.ckInit();window.scrollTo({top:0,behavior:'smooth'});if(window.renderGalert)window.renderGalert()}
+function goTab(x){tab=x;tb();try{heroK()}catch(e){}const special=tab=='Vệ tinh'||tab=='Hàng hoá'||tab=='Đặt hàng'||tab=='Chia Data CTKM'||tab=='Đào tạo Level';$('vt').classList.toggle('hid',tab!='Vệ tinh');$('fb1').classList.toggle('hid',tab!='Vệ tinh');$('empty').classList.toggle('hid',special);$('hh').classList.toggle('hid',tab!='Hàng hoá');$('ck').classList.toggle('hid',tab!='Chia Data CTKM');$('lv').classList.toggle('hid',tab!='Đào tạo Level');$('dh').classList.toggle('hid',tab!='Đặt hàng');if(!special)showAlt();if(tab=='Hàng hoá'&&window.hhInit)window.hhInit();if(tab=='Chia Data CTKM'&&window.ckInit)window.ckInit();if(tab=='Đào tạo Level'&&window.lvInit)window.lvInit();window.scrollTo({top:0,behavior:'smooth'});if(window.renderGalert)window.renderGalert()}
 (function(){let dr=null;
 const cards=g=>[...g.children].filter(x=>x.dataset&&x.dataset.ct&&x!==dr.card);
 document.addEventListener('pointerdown',ev=>{if(ev.button>0)return;const t=ev.target.closest&&ev.target.closest('.g2>[data-ct] .ch>.t');if(!t||ev.target.closest('button,a,input,select'))return;const card=t.closest('[data-ct]'),g=card.parentElement;if(!card.querySelector('[data-mv]'))return;dr={card,g,x:ev.clientX,y:ev.clientY,on:false,id:ev.pointerId,ph:null};try{t.setPointerCapture(ev.pointerId)}catch(e){}});
@@ -979,7 +986,7 @@ function mark(tb,c,d){[...tb.rows[0].cells].forEach((h,i)=>{h.classList.remove('
 function enh(root){(root||document).querySelectorAll('.sc table').forEach(tb=>{if(!tb.rows.length||tb.rows.length<4||tb.closest('.xw'))return;const h=tb.rows[0];if(![...h.cells].every(x=>x.tagName=='TH'))return;if(tb.dataset.en)return;tb.dataset.en='1';[...h.cells].forEach(x=>x.classList.add('srt'));const st=SS[sig(tb)];if(st){busy=true;sortT(tb,st.c,st.d);mark(tb,st.c,st.d);busy=false}})}
 document.addEventListener('click',ev=>{const th=ev.target.closest&&ev.target.closest('.sc th.srt');if(!th)return;const tb=th.closest('table'),c=th.cellIndex,k=sig(tb),cur=SS[k],d=cur&&cur.c==c&&cur.d=='asc'?'desc':'asc';SS[k]={c,d};sortT(tb,c,d);mark(tb,c,d)});
 new MutationObserver(()=>{if(busy)return;busy=true;try{enh()}finally{busy=false}}).observe(document.body,{childList:true,subtree:true});enh()})();
-function tb(){$('tabs').innerHTML=['Thuốc','Cắt liều','Vaccine','Nhân sự','Dự kiến NS','Vệ tinh','Hàng hoá','Đặt hàng','Chia Data CTKM'].map(x=>`<button class="${x==tab?'on':''}" data-x="${x}">${x}</button>`).join('');$('tabs').querySelectorAll('button').forEach(b=>b.onclick=()=>goTab(b.dataset.x))}tb();
+function tb(){$('tabs').innerHTML=['Thuốc','Cắt liều','Vaccine','Nhân sự','Dự kiến NS','Vệ tinh','Hàng hoá','Đặt hàng','Chia Data CTKM','Đào tạo Level'].map(x=>`<button class="${x==tab?'on':''}" data-x="${x}">${x}</button>`).join('');$('tabs').querySelectorAll('button').forEach(b=>b.onclick=()=>goTab(b.dataset.x))}tb();
 function fsel(){const kvs=['Tất cả',...new Set(D.pharm.map(x=>x.kv))],shs=['Tất cả',...new Set(D.pharm.map(x=>x.shop))],kj=kvs.join('|'),sj=shs.join('|');if($('fkv').dataset.j!=kj){$('fkv').innerHTML=kvs.map(x=>`<option value="${x}">${x=='Tất cả'?'— KV của trung tâm tiêm chủng —':'TTTC '+x}</option>`).join('');$('fkv').dataset.j=kj}if($('fshop').dataset.j!=sj){$('fshop').innerHTML=shs.map(x=>`<option value="${x}">${x=='Tất cả'?'— Chọn shop —':sn(x)}</option>`).join('');$('fshop').dataset.j=sj}if(!kvs.includes(kv))kv='Tất cả';if(!shs.includes(shop))shop='Tất cả';$('fkv').value=kv;$('fshop').value=shop}
 fsel();
 $('fkv').onchange=e=>{kv=e.target.value;render()};$('fshop').onchange=e=>{shop=e.target.value;render()};$('fq').oninput=e=>{q=e.target.value.toLowerCase();render()};
@@ -1852,6 +1859,143 @@ async function exp(){
 const fi=$('dhfi');if(fi)fi.onchange=e=>{load(e.target.files[0]);e.target.value=''};
 const up=$('dhup');if(up){['dragover','dragenter'].forEach(t=>up.addEventListener(t,e=>{e.preventDefault()}));up.addEventListener('drop',e=>{e.preventDefault();if(e.dataTransfer.files[0])load(e.dataTransfer.files[0])})}
 window.dhTest=function(n,rows){const ws=XLSX.utils.aoa_to_sheet(rows);SH=[parseSheet(n,ws)];SH[0].use=true;return SH[0]};
+})();
+</script>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const nz=s=>String(s==null?'':s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d').replace(/Đ/g,'D').toLowerCase().replace(/\s+/g,' ').trim();
+const shopN=s=>String(s||'').replace(/^\d+\s*-\s*/,'').replace(/^LC\s+/,'').replace(/,\s*(P\.|X\.|TT\.).*$/,'').trim();
+const ctN=s=>String(s||'').replace(/^\d+\s*-\s*/,'').trim();
+const num=v=>{if(v==null||v==='')return null;const n=parseFloat(String(v).replace(',','.'));return isFinite(n)?n:null};
+const mm=s=>s.slice(5)+'/'+s.slice(0,4);
+const fm=v=>(Math.round(v*100)/100).toString().replace('.',',');
+// Parse "2026-10 : 1.54, 2026-11 : Không có dữ liệu" -> [{m,v,raw}]
+function pm(s){if(!s)return[];return String(s).split(/,\s*(?=\d{4}-\d{2}\s*:)/).map(x=>{const m=x.match(/^(\d{4}-\d{2})\s*:\s*(.*)$/);if(!m)return null;const v=num(m[2]);return{m:m[1],v:/^[\d.,]+$/.test(m[2].trim())?v:null,raw:m[2].trim()}}).filter(Boolean)}
+let ALL=[],FN='',FILT='',SORT='';
+const ASMKEY='lv_asm';let ASM='Ngô Quốc Việt';try{ASM=localStorage.getItem(ASMKEY)||ASM}catch(e){}
+const GR=[
+ {k:'up',t:'Tăng level',c:'ok',d:'Đã đạt đủ điều kiện, được lên level mới kỳ này'},
+ {k:'no',t:'Chưa tăng level',c:'bad',d:'Không đạt kỳ này — xem chỉ số chưa đạt'},
+ {k:'wait',t:'Chờ xét',c:'warn',d:'Đủ điều kiện đầu vào, đang chờ dữ liệu các tháng xét'},
+ {k:'risk',t:'Nguy cơ hạ level',c:'bad',d:'Level 4 — chờ target Vaccine 3 tháng gần nhất để kết luận giữ level'},
+ {k:'down',t:'Hạ level',c:'bad',d:'Bị hạ level theo kết quả xét'},
+ {k:'eln',t:'Chưa xét — cần hoàn thành ELN',c:'mut',d:'Chưa hoàn thành khóa học tín chỉ nên chưa được xét level'},
+ {k:'max',t:'Đã đạt level tối đa',c:'blue',d:'Đã đạt level cao nhất của loại shop (Level 3 shop thường, Level 4 vệ tinh)'}];
+const GM={};GR.forEach(g=>GM[g.k]=g);
+function mk(o){return o}
+function classify(r,sheet,I){
+  const g=k=>{const i=I[k];return i==null?null:r[i]};
+  const p={id:g('Inside'),name:String(g('Họ Tên')||'').trim(),ct:ctN(g('Chức Danh')),shop:shopN(g('Shop')),asm:String(g('ASM')||'').replace(/^\d+\s*-\s*/,''),lvl:g('Level CM'),eln:g('Ngày Hoàn Thành ELN'),ky:g('Kỳ Xét'),thvx:g('Ngày Hoàn Thành THVX'),cpe:g('Ngày Hoàn Thành CPE'),old:sheet=='old',tag:sheet=='old'?'Quy chế cũ':(String(g('Quy chế xét')||'').replace(/^Quy chế mới\s*/,'').replace(/^\(|\)$/g,'')||'Quy chế mới'),pl:g('Phân loại - 11-2026')||g('Phân loại - 10-2026')||'',kq:String(g('Kết Quả Cuối Cùng')||''),dg:String(g('Đánh Giá')||'')};
+  p.bill=num(g('Trung Bình Bill'));p.billD=pm(g('Chi Tiết Bill'));p.gt=num(g('Trung Bình Tỷ Lệ Giới Thiệu'));p.gtD=pm(g('Chi Tiết Tỷ Lệ Giới Thiệu'));
+  p.vx=pm(g('Chi tiết Target Doanh thu Vaccine'));p.dtD=pm(g('Chi tiết Target Doanh thu Dược'));
+  p.ai=num(g('Số Tháng Đạt AI Mentor'));p.aiD=pm(g('Chi Tiết AI Mentor'));p.db=num(g('Số Tháng Đạt AI Dò Bài'));p.asmEv=g('Đánh Giá ASM');
+  const lv=num(p.lvl);p.lv=lv;
+  // chỉ số
+  const ch=[];
+  const add=(k,v,ok)=>ch.push({k,v,ok});
+  if(p.eln)add('ELN',mm(String(p.eln)),true);else if(!p.old)add('ELN','chưa hoàn thành',false);
+  if(p.bill!=null)add('Bill TB',Math.round(p.bill).toLocaleString('vi-VN'),p.bill>=1000);
+  if(p.gt!=null)add('Tỷ lệ giới thiệu TB',fm(p.gt),p.gt>=1);
+  p.vx.forEach(x=>add('Target VX '+mm(x.m),x.v!=null?Math.round(x.v*100)+'%':'chưa có dữ liệu',x.v!=null?x.v>=1:null));
+  if(p.ai!=null)add('AI Mentor',p.ai+' tháng đạt',p.ai>=1);
+  if(p.db!=null)add('AI Dò bài',p.db+' tháng đạt',null);
+  if(p.asmEv!=null&&p.asmEv!=='')add('Đánh giá ASM',String(p.asmEv),String(p.asmEv)=='Đạt');
+  if(p.thvx)add('THVX',String(p.thvx),true);
+  if(p.cpe)add('CPE',String(p.cpe),true);
+  p.ch=ch;
+  // phân nhóm + lý do
+  let gk,why=[],note='';
+  if(p.old){
+    const m=p.kq.match(/Đạt level\s*(\d)/i);
+    if(m){gk='up';note='Lên Level '+m[1]+(p.lv!=null?' (hiện Level '+p.lv+')':'')}
+    else{gk='no';why=p.dg?p.dg.split(/,\s*/).filter(Boolean):['Chưa đạt']}
+    if(/hạ/i.test(p.kq+p.dg)){gk='down'}
+  }else{
+    const d=p.dg;
+    if(/hạ\s*(xuống)?\s*level/i.test(d))gk='down';
+    else if(/Cần hoàn thành khóa ELN/i.test(d)){gk='eln';why=['Chưa hoàn thành khóa ELN Level '+(p.lv!=null?(p.lv+1):'tiếp theo')+' (chưa xét)']}
+    else if(/tối đa/i.test(d)){gk='max';note=d.replace(/^Đã đạt /,'Đã đạt ')}
+    else if(/giữ Level\s*4/i.test(d)){gk='risk';why=['Chờ target Vaccine 3 tháng gần nhất để kết luận giữ Level 4'];const k=d.match(/Kỳ đánh giá gần nhất là (\d{4}-\d{2})/);if(k)note='Kỳ đánh giá '+mm(k[1])}
+    else if(/^Chờ dữ liệu/i.test(d)){gk='wait';const k=d.match(/Xét vào tháng (\d{4}-\d{2})/);note=k?'Xét vào tháng '+mm(k[1]):d;
+      // cảnh báo sớm các chỉ số đã chưa đạt
+      ch.forEach(c=>{if(c.ok===false&&c.k!='ELN')why.push(c.k+': '+c.v+(/Target VX/.test(c.k)?' (cần ≥ 100%)':c.k=='Bill TB'?' (cần ≥ 1.000)':c.k=='AI Mentor'?' (cần ≥ 1 tháng)':''))})}
+    else{gk='wait';note=d||'—'}
+  }
+  p.g=gk;p.why=why;p.note=note;return p;
+}
+function parseWB(wb){
+  const out=[];
+  wb.SheetNames.forEach((sn,si)=>{
+    const A=XLSX.utils.sheet_to_json(wb.Sheets[sn],{header:1,defval:null,raw:true});if(A.length<2)return;
+    const H=A[0].map(x=>String(x==null?'':x).trim());if(!H.includes('ASM')||!H.includes('Inside'))return;
+    const I={};H.forEach((h,i)=>{if(!(h in I))I[h]=i});
+    const old=/cũ/i.test(sn);
+    A.slice(1).forEach(r=>{if(r[I['Inside']]==null)return;out.push(classify(r,old?'old':'new',I))});
+  });
+  return out;
+}
+function save(){try{localStorage.setItem('lv_all',JSON.stringify({fn:FN,t:Date.now(),all:ALL}))}catch(e){}}
+function load(){try{const j=JSON.parse(localStorage.getItem('lv_all')||'null');if(j&&j.all){ALL=j.all;FN=j.fn||''}}catch(e){}}
+function mine(){const k=nz(ASM);return ALL.filter(p=>nz(p.asm).includes(k))}
+const dot={ok:'var(--ok)',bad:'var(--bad)',warn:'var(--warn)',blue:'#2563eb',mut:'var(--mut)'};
+function badge(p){const g=GM[p.g];return `<span style="display:inline-block;padding:3px 10px;border-radius:999px;font-weight:700;font-size:12.5px;white-space:nowrap;background:color-mix(in srgb,${dot[g.c]} 16%,transparent);color:${dot[g.c]}">${esc(g.t)}</span>`}
+function chip(c){const col=c.ok===true?'var(--ok)':c.ok===false?'var(--bad)':'var(--mut)';return `<span style="display:inline-block;margin:1px 4px 1px 0;padding:1px 7px;border-radius:6px;font-size:12px;white-space:nowrap;border:1px solid color-mix(in srgb,${col} 40%,transparent);color:${col}">${esc(c.k)}: <b>${esc(c.v)}</b></span>`}
+function table(L){
+  const rows=L.map(p=>`<tr><td style="text-align:left"><b>${esc(p.name)}</b><div class="sub">${esc(p.ct)}</div></td><td style="text-align:left">${esc(p.shop)}</td><td>${p.lv==null?'—':p.lv}</td><td style="text-align:left">${badge(p)}${p.note?`<div class="sub" style="margin-top:3px">${esc(p.note)}</div>`:''}</td><td style="text-align:left;white-space:normal;min-width:200px">${p.why.length?p.why.map(w=>`<div class="bad" style="font-weight:600">• ${esc(w)}</div>`).join(''):'<span class="sub">—</span>'}</td><td style="text-align:left;white-space:normal;min-width:260px">${p.ch.map(chip).join('')||'<span class="sub">—</span>'}</td><td style="text-align:left"><span class="sub">${esc(p.tag)}${p.pl?' · shop '+esc(String(p.pl).toLowerCase()):''}</span></td></tr>`).join('');
+  return `<div class="sc"><table style="user-select:text"><tr><th style="text-align:left">Dược sĩ</th><th style="text-align:left">Shop</th><th>Level hiện tại</th><th style="text-align:left">Kết quả</th><th style="text-align:left">Không đạt / cần lưu ý</th><th style="text-align:left">Chỉ số chi tiết</th><th style="text-align:left">Quy chế</th></tr>${rows||'<tr><td colspan="7" class="sub">Không có dược sĩ nào</td></tr>'}</table></div>`;
+}
+function render(){
+  const body=$('lvbody'),nod=$('lvnod');
+  const M=mine();
+  $('lvfs').textContent=FN?('Đã nạp: '+FN+' · '+ALL.length+' dược sĩ toàn khu vực'):'Chưa có file nào';
+  if(!ALL.length){nod.classList.remove('hid');body.classList.add('hid');return}
+  nod.classList.add('hid');body.classList.remove('hid');
+  if(!M.length){body.innerHTML=`<div class="wb"><b>Không tìm thấy dược sĩ nào thuộc ASM "${esc(ASM)}"</b><div class="sub">Kiểm tra lại tên ASM ở ô bên trên (trong file có ${new Set(ALL.map(p=>p.asm)).size} ASM).</div></div>`;return}
+  const cnt={};GR.forEach(g=>cnt[g.k]=M.filter(p=>p.g==g.k).length);
+  const tiles=GR.filter(g=>cnt[g.k]||['up','no','wait','down'].includes(g.k)).map(g=>`<div data-g="${g.k}" style="cursor:pointer;padding:9px 12px;border-radius:10px;background:var(--chip);border:2px solid ${FILT==g.k?'var(--bl)':'transparent'};border-left:5px solid ${dot[g.c]}"><div class="sub">${esc(g.t)}</div><div style="font-size:22px;font-weight:800;color:${dot[g.c]}">${cnt[g.k]} <span style="font-size:13px;font-weight:600">/ ${M.length}</span></div><div class="sub" style="font-size:11.5px">${esc(g.d)}</div></div>`).join('');
+  // tổng hợp lý do không đạt
+  const rc={};M.filter(p=>p.g=='no').forEach(p=>p.why.forEach(w=>rc[w]=(rc[w]||0)+1));
+  const rs=Object.entries(rc).sort((a,b)=>b[1]-a[1]);
+  const early={};M.filter(p=>p.g=='wait').forEach(p=>p.why.forEach(w=>{const k=w.replace(/:.*$/,'');early[k]=(early[k]||0)+1}));
+  const es=Object.entries(early).sort((a,b)=>b[1]-a[1]);
+  const sum=`<div class="c" style="margin-top:10px"><b>Các chỉ số đang kéo level</b>${rs.length?`<div style="margin-top:6px"><span class="sub">Chưa tăng level do:</span> ${rs.map(([k,v])=>`<span style="display:inline-block;margin:2px 6px 2px 0;padding:2px 9px;border-radius:999px;background:rgba(195,74,53,.12);color:var(--bad);font-size:13px;font-weight:600">${esc(k)} · ${v}</span>`).join('')}</div>`:''}${es.length?`<div style="margin-top:6px"><span class="sub">Đang chờ xét nhưng đã có chỉ số chưa đạt:</span> ${es.map(([k,v])=>`<span style="display:inline-block;margin:2px 6px 2px 0;padding:2px 9px;border-radius:999px;background:rgba(217,160,30,.16);color:var(--warn);font-size:13px;font-weight:600">${esc(k)} · ${v}</span>`).join('')}</div>`:''}${!rs.length&&!es.length?'<div class="sub" style="margin-top:4px">Chưa có chỉ số nào bị chưa đạt.</div>':''}</div>`;
+  let L=M.slice();if(FILT)L=L.filter(p=>p.g==FILT);
+  const order=GR.map(g=>g.k);L.sort((a,b)=>order.indexOf(a.g)-order.indexOf(b.g)||a.shop.localeCompare(b.shop,'vi')||a.name.localeCompare(b.name,'vi'));
+  body.innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px;margin-top:10px">${tiles}</div>${sum}<div class="c" style="margin-top:10px"><div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px"><b>${FILT?esc(GM[FILT].t)+' · ':''}${L.length} dược sĩ — ASM ${esc(ASM)}</b>${FILT?'<a id="lvx" style="cursor:pointer;color:var(--bl);font-size:13px">· bỏ lọc</a>':''}<span style="flex:1"></span><button class="pill" id="lvcp">Copy danh sách chưa đạt (gửi Zalo)</button><button class="pill" id="lvim">Xem trước &amp; tải ảnh bảng</button></div><div class="sub" id="lvcm" style="margin-bottom:6px">Bấm vào ô thống kê ở trên để lọc. Xanh = đạt, đỏ = chưa đạt, xám = chưa có dữ liệu.</div><div id="lvtb">${table(L)}</div></div>`;
+  body.querySelectorAll('[data-g]').forEach(t=>t.onclick=()=>{FILT=FILT==t.dataset.g?'':t.dataset.g;render()});
+  const x=$('lvx');if(x)x.onclick=()=>{FILT='';render()};
+  $('lvim').onclick=function(){if(window.__shotEl)window.__shotEl(this,$('lvtb').innerHTML,'Kết quả xét Level Dược sĩ — ASM '+ASM,'KV2_level_duoc_si',1900)};
+  $('lvcp').onclick=async()=>{const t=copyText(M);let ok=0;try{await navigator.clipboard.writeText(t);ok=1}catch(e){try{const a=document.createElement('textarea');a.value=t;a.style.cssText='position:fixed;opacity:0';document.body.appendChild(a);a.select();ok=document.execCommand('copy');a.remove()}catch(e2){}}$('lvcm').textContent=ok?'Đã copy nội dung gửi Zalo.':'Không copy được.'};
+}
+function copyText(M){
+  const no=M.filter(p=>p.g=='no'),wt=M.filter(p=>p.g=='wait'&&p.why.length),rk=M.filter(p=>p.g=='risk'||p.g=='down');
+  const ln=p=>'- '+p.name+' ('+p.shop+', Level '+(p.lv==null?'?':p.lv)+'): '+(p.why.join('; ')||GM[p.g].t);
+  let t='KẾT QUẢ XÉT LEVEL DƯỢC SĨ — ASM '+ASM+'\n';
+  const up=M.filter(p=>p.g=='up');if(up.length)t+='\nTĂNG LEVEL ('+up.length+'):\n'+up.map(p=>'- '+p.name+' ('+p.shop+'): '+p.note).join('\n')+'\n';
+  if(no.length)t+='\nCHƯA TĂNG LEVEL ('+no.length+'):\n'+no.map(ln).join('\n')+'\n';
+  if(rk.length)t+='\nCẦN LƯU Ý GIỮ LEVEL ('+rk.length+'):\n'+rk.map(ln).join('\n')+'\n';
+  if(wt.length)t+='\nĐANG CHỜ XÉT NHƯNG CÓ CHỈ SỐ CHƯA ĐẠT ('+wt.length+'):\n'+wt.map(ln).join('\n')+'\n';
+  const el=M.filter(p=>p.g=='eln');if(el.length)t+='\nCHƯA XÉT — CẦN HOÀN THÀNH KHÓA ELN ('+el.length+'):\n'+el.map(p=>'- '+p.name+' ('+p.shop+', Level '+(p.lv==null?'?':p.lv)+')').join('\n')+'\n';
+  return t.trim();
+}
+async function handle(f){
+  $('lvfs').textContent='Đang đọc file...';
+  try{const wb=XLSX.read(await f.arrayBuffer());const R=parseWB(wb);if(!R.length)throw new Error('không tìm thấy sheet có cột ASM / Inside');ALL=R;FN=f.name;FILT='';save();if(window.__xlog)window.__xlog(f.name)}
+  catch(e){$('lvfs').textContent='Không đọc được file: '+(e&&e.message||e);return}
+  render();
+}
+let wired=false;
+window.lvInit=function(){
+  if(!wired){wired=true;load();
+    $('lvfi').onchange=e=>{const f=e.target.files[0];e.target.value='';if(f)handle(f)};
+    const up=$('lvup');['dragover','dragenter'].forEach(t=>up.addEventListener(t,e=>e.preventDefault()));up.addEventListener('drop',e=>{e.preventDefault();if(e.dataTransfer.files[0])handle(e.dataTransfer.files[0])});
+    const a=$('lvasm');a.value=ASM;a.onchange=()=>{ASM=a.value.trim()||ASM;try{localStorage.setItem(ASMKEY,ASM)}catch(e){}FILT='';render()};
+  }
+  render();
+};
+window.lvTest=function(wb){ALL=parseWB(wb);return ALL};
 })();
 </script>
 </body></html>
