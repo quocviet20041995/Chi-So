@@ -1938,7 +1938,8 @@ function parseWB(wb){
   return out;
 }
 function save(){try{localStorage.setItem('lv_all',JSON.stringify({fn:FN,t:Date.now(),all:ALL}))}catch(e){}}
-function load(){try{const j=JSON.parse(localStorage.getItem('lv_all')||'null');if(j&&j.all){ALL=j.all;FN=j.fn||''}}catch(e){}}
+function fixMax(p){if(p.g!='max')return p;p.ch=(p.ch||[]).filter(c=>c.k=='CPE'||!/^(ELN|THVX|AI Dò bài|AI Mentor|Bill TB|Đánh giá ASM|Target VX|Tỷ lệ giới thiệu)/.test(c.k));if(!p.ch.some(c=>c.k=='CPE'))p.ch.push({k:'CPE',v:'chưa có dữ liệu',ok:null});return p}
+function load(){try{const j=JSON.parse(localStorage.getItem('lv_all')||'null');if(j&&j.all){ALL=j.all.map(fixMax);FN=j.fn||''}}catch(e){}}
 function mine(){const k=nz(ASM);return ALL.filter(p=>nz(p.asm).includes(k))}
 const dot={ok:'#16a34a',bad:'#c34a35',warn:'#b7791f',blue:'#2563eb',mut:'#64748b'},rg={ok:'22,163,74',bad:'195,74,53',warn:'217,160,30',blue:'37,99,235',mut:'100,116,139'};
 function badge(p){const g=GM[p.g];return `<span style="display:inline-block;padding:3px 10px;border-radius:999px;font-weight:700;font-size:12.5px;white-space:nowrap;background:rgba(${rg[g.c]},.16);color:${dot[g.c]}">${esc(g.t)}</span>`}
