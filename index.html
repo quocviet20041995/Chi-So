@@ -1923,6 +1923,7 @@ function classify(r,sheet,I){
       ch.forEach(c=>{if(c.ok===false&&c.k!='ELN')why.push(c.k+': '+c.v+(/Target VX/.test(c.k)?' (cần ≥ 100%)':c.k=='Bill TB'?' (cần ≥ 1.000)':c.k=='AI Mentor'?' (cần ≥ 1 tháng)':''))})}
     else{gk='wait';note=d||'—'}
   }
+  if(gk=='max'){p.ch=p.ch.filter(c=>c.k!='ELN'&&c.k!='THVX'&&c.k!='AI Dò bài'&&!/^Target VX/.test(c.k)&&c.k!='AI Mentor'&&c.k!='Bill TB'&&c.k!='Đánh giá ASM');if(!p.cpe)p.ch.push({k:'CPE',v:'chưa có dữ liệu',ok:null});p.note='Đã đạt level tối đa — chỉ cần hoàn thành CPE hàng năm'}
   p.g=gk;p.why=why;p.note=note;return p;
 }
 function parseWB(wb){
