@@ -758,7 +758,7 @@ function hcProjection(S){
     const hc=(D.roster||[]).length?D.roster.filter(x=>isHC(x)&&x.shop==s.name).length:(D.staff||[]).filter(x=>x.shop==s.name).length;
     const bd=o&&o[s.name]&&o[s.name].bd!=null?o[s.name].bd:(s.bd!=null?s.bd:null);
     if(bd==null&&!hc)return null;
-    const calcNeed=bd!=null?bd/BPH:null;
+    const calcNeed=bd!=null?Math.floor(bd/BPH+1e-9):null,exact=bd!=null?bd/BPH:null;
     const ov=null;
     const need=ov!=null?ov:calcNeed;
     const diff=need!=null?need-hc:null;
@@ -770,16 +770,16 @@ function hcProjection(S){
         if(ks.length){const k=ks[ks.length-1],gap=dy-(+k.slice(8));recent=(s.bill-H[k][s.name].lk)/gap;if(recent>=0)proj=(s.bill+recent*(LOCK_DAY-dy))/LOCK_DAY;else recent=null}}}catch(e){}
     const toKeep=dailyNeeded(base*BPH,liveBd);
     const toGrow=dailyNeeded((base+1)*BPH,liveBd);
-    return{shop:s.name,code:s.code,recent,proj,hc,base,bd,liveBd,need,calcNeed,override:ov!=null,diff,toKeep,toGrow};
+    return{shop:s.name,code:s.code,exact,recent,proj,hc,base,bd,liveBd,need,calcNeed,override:ov!=null,diff,toKeep,toGrow};
   }).filter(Boolean);
   return{rows,locked,asOf,nextLabel:'tháng '+(nx.getMonth()+1)+'/'+nx.getFullYear()};
 }
 function hcBlock(inS){
   const HC=hcProjection(inS);
   if(!HC.rows.length)return'';
-  const risk=HC.rows.filter(x=>x.diff!=null&&x.diff<0),slow=HC.rows.filter(x=>!(x.diff!=null&&x.diff<0)&&x.proj!=null&&x.proj<x.base*BPH),grow=HC.rows.filter(x=>x.diff!=null&&x.diff>=1);
+  const risk=HC.rows.filter(x=>x.diff!=null&&x.diff<0),slow=HC.rows.filter(x=>!(x.diff!=null&&x.diff<0)&&x.proj!=null&&x.proj<x.base*BPH),grow=HC.rows.filter(x=>x.diff!=null&&x.diff>0);
   const sumHC=sum(HC.rows,x=>x.hc),withNeed=HC.rows.filter(x=>x.need!=null),sumNeed=sum(withNeed,x=>x.need);
-  const kpis=cards([['Nhân sự hiện tại',sumHC,HC.rows.length+' shop · không tính DS chuyên môn'],['Dự kiến cần — '+HC.nextLabel,(Math.round(sumNeed*10)/10).toString().replace('.',','),'theo '+BPH+' bill/người/ngày'],['Nguy cơ giảm nhân sự',risk.length+(slow.length?' + '+slow.length:''),slow.length?'shop · thêm '+slow.length+' shop đang chững (nhịp gần đây): '+slow.map(x=>sn(x.shop)).join(', '):'shop · cần tăng bill/ngày'],['Đủ điều kiện xin thêm',grow.length,'shop']]);
+  const kpis=cards([['Nhân sự hiện tại',sumHC,HC.rows.length+' shop · không tính DS chuyên môn'],['Dự kiến cần — '+HC.nextLabel,sumNeed,'theo '+BPH+' bill/người/ngày'],['Nguy cơ giảm nhân sự',risk.length+(slow.length?' + '+slow.length:''),slow.length?'shop · thêm '+slow.length+' shop đang chững (nhịp gần đây): '+slow.map(x=>sn(x.shop)).join(', '):'shop · cần tăng bill/ngày'],['Đủ điều kiện xin thêm',grow.length,'shop']]);
   const rows=HC.rows.slice().sort((a,b)=>(a.diff==null?99:a.diff)-(b.diff==null?99:b.diff));
   const fmt1=v=>(Math.round(v*10)/10).toString().replace('.',',');
   const need=(dn,ppl,keep)=>{
@@ -795,13 +795,13 @@ function hcBlock(inS){
   const rC=x=>x.recent==null?null:`<b class="${x.proj>=x.base*BPH?'ok':'bad'}">${fmt1(x.recent)}/ngày</b><span class="sub" style="display:block">→ TB 1–23 ≈ ${fmt1(x.proj)} ${x.proj>=x.base*BPH?'· đủ giữ':'· thiếu '+Math.ceil(x.base*BPH-x.proj)}</span>`;
   const hasR=rows.some(x=>x.recent!=null);
   const kB=x=>{const d=x.toKeep;if(d==null)return'—';if(d.done)return'<span class="sub">Đã qua hạn chốt</span>';return d.enough?`<b class="ok">Giữ ${fmt1(x.liveBd)} bill/ngày</b><span class="sub" style="display:block">còn ${d.remain} ngày đến chốt · giữ ${x.hc} nhân sự</span>`:`<b class="warn">Cần ${Math.ceil(d.req)} bill/ngày</b><span class="sub" style="display:block">còn ${d.remain} ngày đến chốt · giữ ${x.hc} nhân sự</span>`};
-  const eC=x=>x.need==null?'—':`<b class="${x.need<x.hc?'bad':x.need<x.hc+1?'warn':'ok'}">${(Math.round(x.need*100)/100).toString().replace('.',',')}</b>`;
+  const eC=x=>x.need==null?'—':`<b class="${x.need<x.hc?'bad':x.need==x.hc?'warn':'ok'}">${x.need}</b> <span class="sub">(${(Math.round(x.exact*100)/100).toString().replace('.',',')})</span>`;
   const H=['Shop','Nhân sự hiện tại','Bill TB ngày','Nhân sự dự kiến đạt được','Bill/ngày cần đạt (giữ nhân sự hiện tại)'];
   const tb=table(H,rows.map(x=>[sn(x.shop),x.hc,x.bd!=null?fmt1(x.bd):'—',eC(x),kB(x)]));
-  const cd=rows.map(x=>`<div class="ovc"><div class="ovh"><b class="ovn">${sn(x.shop)}</b>${eC(x)}</div><div class="ovp"><span>Hiện tại <b>${x.hc}</b> người</span><span>Bill TB ngày <b>${x.bd!=null?fmt1(x.bd):'—'}</b></span><span>Dự kiến đạt được <b>${x.need==null?'—':(Math.round(x.need*100)/100).toString().replace('.',',')}</b> người</span></div><div class="hcl2"><div><span class="sub">Bill/ngày cần đạt</span>${kB(x)}</div></div></div>`).join('');
+  const cd=rows.map(x=>`<div class="ovc"><div class="ovh"><b class="ovn">${sn(x.shop)}</b>${eC(x)}</div><div class="ovp"><span>Hiện tại <b>${x.hc}</b> người</span><span>Bill TB ngày <b>${x.bd!=null?fmt1(x.bd):'—'}</b></span><span>Dự kiến đạt được <b>${x.need==null?'—':x.need}</b> người</span></div><div class="hcl2"><div><span class="sub">Bill/ngày cần đạt</span>${kB(x)}</div></div></div>`).join('');
   const LI=lockInfo(),lockB=LI&&LI.msg?`<div class="wb" style="margin:12px 0 0;${LI.c=='bad'?'background:rgba(195,74,53,.1);border-color:rgba(195,74,53,.3)':''}"><b>${LI.c=='bad'?'✗':'⏰'} ${LI.msg}</b></div>`:'';
   const st=HC.locked?(HC.noSnap?`Đã qua ngày chốt nhưng chưa có dữ liệu ngày 1–23 — đang tạm dùng Bill TB ngày hiện tại.`:`Đã chốt theo dữ liệu ngày ${HC.asOf.slice(8)}/${HC.asOf.slice(5,7)}.`):`Chưa tới ngày chốt (24 hằng tháng, tính trên dữ liệu ngày 1–23).`;
-  return '<div class="hcs">'+lockB+`<h2 style="margin-top:20px">Dự kiến nhân sự — ${HC.nextLabel}</h2><div class="bar" style="margin-bottom:8px"><button class="btn" onclick="window.__shotHC(this)">Xem trước &amp; tải ảnh bảng nhân sự</button></div><div class="sub" style="margin-bottom:8px">${st} Nhân sự hiện tại = người đang làm, không tính dược sĩ chuyên môn. Nhân sự dự kiến đạt được = Bill TB ngày ÷ ${BPH}, giữ nguyên số lẻ, không làm tròn: đỏ = thấp hơn nhân sự hiện tại (nguy cơ giảm), vàng = đủ giữ, xanh = đủ để tăng thêm 1 người. Bill/ngày cần đạt = số bill mỗi ngày cho các ngày còn lại tới ngày 23 để giữ đủ nhân sự hiện tại: xanh = chỉ cần giữ mức hiện tại, vàng = phải tăng lên đúng số ghi.</div>${kpis}<div class="c" style="margin-top:10px"><div class="ovt">${tb}</div><div class="ovm">${cd}<details class="ovx"><summary>Xem bảng đầy đủ (vuốt ngang)</summary>${tb}</details></div></div></div>`
+  return '<div class="hcs">'+lockB+`<h2 style="margin-top:20px">Dự kiến nhân sự — ${HC.nextLabel}</h2><div class="bar" style="margin-bottom:8px"><button class="btn" onclick="window.__shotHC(this)">Xem trước &amp; tải ảnh bảng nhân sự</button></div><div class="sub" style="margin-bottom:8px">${st} Nhân sự hiện tại = người đang làm, không tính dược sĩ chuyên môn. Nhân sự dự kiến đạt được = Bill TB ngày ÷ ${BPH}, làm tròn xuống (số lẻ ghi trong ngoặc): đỏ = thấp hơn nhân sự hiện tại (nguy cơ giảm), vàng = đủ giữ, xanh = đủ để tăng thêm. Bill/ngày cần đạt = số bill mỗi ngày cho các ngày còn lại tới ngày 23 để giữ đủ nhân sự hiện tại: xanh = chỉ cần giữ mức hiện tại, vàng = phải tăng lên đúng số ghi.</div>${kpis}<div class="c" style="margin-top:10px"><div class="ovt">${tb}</div><div class="ovm">${cd}<details class="ovx"><summary>Xem bảng đầy đủ (vuốt ngang)</summary>${tb}</details></div></div></div>`
 }
 
 
